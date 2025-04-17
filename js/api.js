@@ -1,6 +1,6 @@
 // Storm Glass API service
 const WeatherAPI = {
-    API_KEY: '8d743080-1b6d-11f0-a93f-0242ac130003-8d7430da-1b6d-11f0-a93f-0242ac130003', 
+    API_KEY: 'put your api heres', 
     BASE_URL: 'https://api.stormglass.io/v2',
     
     // Get current weather by coordinates
