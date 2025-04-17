@@ -4,7 +4,7 @@
     --color-cloudy: linear-gradient(to bottom, #D3D3D3, #778899);
     --color-night: linear-gradient(to bottom, #191970, #000000);
     
-    --text-color: #FFFFFF;
+    --text-color: #000000;
     --card-background: rgba(255, 255, 255, 0.8);
     --shadow-color: rgba(0, 0, 0, 0.1);
 }
@@ -52,4 +52,39 @@ body {
         background: var(--card-background);
         padding: 12px;
     }
+}
+
+/* Weather condition themes */
+.theme-clear {
+    background: linear-gradient(to bottom, #87CEEB, #1E90FF);
+}
+
+.theme-rainy {
+    background: linear-gradient(to bottom, #2C3E50, #34495E);
+}
+
+.theme-rainy .weather-card,
+.theme-rainy header,
+.theme-rainy footer,
+.theme-night .weather-card,
+.theme-night header,
+.theme-night footer {
+    color: #fff;
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.theme-cloudy {
+    background: linear-gradient(to bottom, #D3D3D3, #778899);
+}
+
+.theme-night {
+    background: linear-gradient(to bottom, #191970, #000000);
+}
+
+/* Apply the theme to body to affect all child elements */
+body.theme-clear,
+body.theme-rainy,
+body.theme-cloudy,
+body.theme-night {
+    color: #000000;
 }

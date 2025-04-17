@@ -54,3 +54,53 @@
         transform: rotate(360deg);
     }
 }
+/* Loading animations */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes pulse {
+    0% { opacity: 0.6; }
+    50% { opacity: 1; }
+    100% { opacity: 0.6; }
+}
+
+/* Apply animations */
+.weather-card {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+.forecast-scroll, .forecast-stack {
+    animation: slideUp 0.5s ease-out;
+}
+
+/* Loading state for weather data */
+.loading {
+    animation: pulse 1.5s infinite;
+}
+
+/* Refresh button rotation */
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.refreshing img {
+    animation: spin 1s linear infinite;
+}
+
+/* Hover effects */
+.weather-card, #bottom-nav button {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.weather-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}

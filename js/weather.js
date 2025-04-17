@@ -1,79 +1,146 @@
 // This file manages the current weather display, including temperature toggling, weather icons, and additional weather details.
 
-const apiKey = 'YOUR_API_KEY'; // Replace with your actual API key
-const weatherContainer = document.getElementById('weather-container');
+// Updated element selectors to match your HTML
 const temperatureElement = document.getElementById('temperature');
 const feelsLikeElement = document.getElementById('feels-like');
 const humidityElement = document.getElementById('humidity');
 const windSpeedElement = document.getElementById('wind-speed');
 const uvIndexElement = document.getElementById('uv-index');
-const sunriseElement = document.getElementById('sunrise');
-const sunsetElement = document.getElementById('sunset');
 const lastUpdatedElement = document.getElementById('last-updated');
-const refreshButton = document.getElementById('refresh-button');
-const unitToggle = document.getElementById('unit-toggle');
+const refreshButton = document.getElementById('refresh-btn'); // Changed to match HTML
+const tempToggle = document.getElementById('temp-toggle'); // Changed to match HTML
+const sunriseSunsetElement = document.getElementById('sunrise-sunset'); // Changed to match HTML
 
 let currentUnit = 'metric'; // Default to Celsius
 
-function fetchWeather(location) {
-    const url = `https://api.openweathermap.org/data/2.5/weather?q=${location}&units=${currentUnit}&appid=${apiKey}`;
-    fetch(url)
-        .then(response => response.json())
-        .then(data => updateWeatherDisplay(data))
-        .catch(error => console.error('Error fetching weather data:', error));
-}
-
+// Weather display update function
 function updateWeatherDisplay(data) {
+    if (!data) return;
+    
     const temperature = Math.round(data.main.temp);
     const feelsLike = Math.round(data.main.feels_like);
     const humidity = data.main.humidity;
-    const windSpeed = Math.round(data.wind.speed);
-    const uvIndex = data.uvi;
-    const sunrise = new Date(data.sys.sunrise * 1000).toLocaleTimeString();
-    const sunset = new Date(data.sys.sunset * 1000).toLocaleTimeString();
+    const windSpeed = Math.round(data.wind.speed * 3.6); // Convert m/s to km/h
     
-    temperatureElement.textContent = `${temperature}°${currentUnit === 'metric' ? 'C' : 'F'}`;
-    feelsLikeElement.textContent = `Feels like: ${feelsLike}°${currentUnit === 'metric' ? 'C' : 'F'}`;
+    // Update temperature displays
+    temperatureElement.textContent = `${temperature}°`;
+    feelsLikeElement.textContent = `Feels like: ${feelsLike}°`;
     humidityElement.textContent = `Humidity: ${humidity}%`;
-    windSpeedElement.textContent = `Wind Speed: ${windSpeed} m/s`;
-    uvIndexElement.textContent = `UV Index: ${uvIndex}`;
-    sunriseElement.textContent = `Sunrise: ${sunrise}`;
-    sunsetElement.textContent = `Sunset: ${sunset}`;
+    windSpeedElement.textContent = `Wind: ${windSpeed} km/h`;
+    
+    // Handle UV index if available
+    if (data.uvi !== undefined) {
+        uvIndexElement.textContent = `UV Index: ${data.uvi}`;
+    }
+    
+    // Handle sunrise/sunset
+    if (data.sys && data.sys.sunrise && data.sys.sunset) {
+        const sunrise = new Date(data.sys.sunrise * 1000).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        const sunset = new Date(data.sys.sunset * 1000).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        sunriseSunsetElement.textContent = `Sunrise: ${sunrise} | Sunset: ${sunset}`;
+    }
+    
     lastUpdatedElement.textContent = `Last updated: ${new Date().toLocaleTimeString()}`;
     
-    updateBackground(data.weather[0].main);
+    // Update weather icon
+    const weatherIcon = document.getElementById('weather-icon');
+    if (weatherIcon && data.weather && data.weather[0]) {
+        const iconCode = data.weather[0].icon;
+        weatherIcon.innerHTML = `<img src="https://openweathermap.org/img/wn/${iconCode}@2x.png" alt="${data.weather[0].description}">`;
+    }
+    
+    // Update background theme
+    if (data.weather && data.weather[0]) {
+        updateBackground(data.weather[0].main, data.dt, data.sys?.sunrise, data.sys?.sunset);
+    }
 }
 
-function updateBackground(weatherCondition) {
-    let gradient;
-    switch (weatherCondition) {
-        case 'Clear':
-            gradient = 'linear-gradient(to bottom, #87CEEB, #1E90FF)';
+function updateBackground(weatherCondition, currentTime, sunrise, sunset) {
+    const body = document.body;
+    
+    // Remove existing themes
+    body.classList.remove('theme-clear', 'theme-rainy', 'theme-cloudy', 'theme-night');
+    
+    // Check if it's day or night
+    const isNight = currentTime < sunrise || currentTime > sunset;
+    
+    if (isNight) {
+        body.classList.add('theme-night');
+        return;
+    }
+    
+    // Apply theme based on weather condition
+    switch (weatherCondition.toLowerCase()) {
+        case 'clear':
+            body.classList.add('theme-clear');
             break;
-        case 'Rain':
-            gradient = 'linear-gradient(to bottom, #2C3E50, #34495E)';
+        case 'rain':
+        case 'drizzle':
+        case 'thunderstorm':
+            body.classList.add('theme-rainy');
             break;
-        case 'Clouds':
-            gradient = 'linear-gradient(to bottom, #D3D3D3, #778899)';
-            break;
-        case 'Snow':
-        case 'Mist':
-            gradient = 'linear-gradient(to bottom, #191970, #000000)';
+        case 'clouds':
+        case 'mist':
+        case 'fog':
+        case 'haze':
+            body.classList.add('theme-cloudy');
             break;
         default:
-            gradient = 'linear-gradient(to bottom, #87CEEB, #1E90FF)';
+            body.classList.add('theme-clear');
     }
-    document.body.style.background = gradient;
 }
 
-unitToggle.addEventListener('change', () => {
-    currentUnit = unitToggle.checked ? 'imperial' : 'metric';
-    fetchWeather('Your Location'); // Replace with actual location or use geolocation
+// Add event listeners only if elements exist
+document.addEventListener('DOMContentLoaded', () => {
+    // Refresh button event listener
+    if (refreshButton) {
+        refreshButton.addEventListener('click', () => {
+            // Trigger refresh in app.js
+            if (typeof updateWeatherData === 'function') {
+                navigator.geolocation.getCurrentPosition(
+                    position => updateWeatherData(position.coords.latitude, position.coords.longitude),
+                    error => console.error('Error getting location:', error)
+                );
+            }
+        });
+    }
+    
+    // Temperature toggle event listener
+    if (tempToggle) {
+        tempToggle.addEventListener('click', () => {
+            if (tempToggle.textContent === '°C') {
+                tempToggle.textContent = '°F';
+                convertTemperatures('C', 'F');
+            } else {
+                tempToggle.textContent = '°C';
+                convertTemperatures('F', 'C');
+            }
+        });
+    }
 });
 
-refreshButton.addEventListener('click', () => {
-    fetchWeather('Your Location'); // Replace with actual location or use geolocation
-});
-
-// Initial fetch
-fetchWeather('Your Location'); // Replace with actual location or use geolocation
+// Temperature conversion function
+function convertTemperatures(from, to) {
+    // Get all temperature elements
+    const tempElements = document.querySelectorAll('[id*="temp"], [id*="feels"]');
+    
+    tempElements.forEach(element => {
+        const text = element.textContent;
+        const tempMatch = text.match(/(-?\d+(?:\.\d+)?)°/);
+        
+        if (tempMatch) {
+            const currentTemp = parseFloat(tempMatch[1]);
+            let newTemp;
+            
+            if (from === 'C' && to === 'F') {
+                newTemp = Math.round((currentTemp * 9/5) + 32);
+            } else if (from === 'F' && to === 'C') {
+                newTemp = Math.round((currentTemp - 32) * 5/9);
+            } else {
+                return;
+            }
+            
+            element.textContent = text.replace(`${tempMatch[1]}°`, `${newTemp}°`);
+        }
+    });
+}
