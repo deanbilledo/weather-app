@@ -1,0 +1,81 @@
+body {
+    margin: 0;
+    font-family: system-ui, sans-serif;
+    background-color: #f0f0f0;
+    color: #333;
+}
+
+.container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 20px;
+}
+
+.weather-card {
+    background: rgba(255, 255, 255, 0.85);
+    border-radius: 16px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin: 20px 0;
+    text-align: center;
+}
+
+.temperature {
+    font-size: 48px;
+    font-weight: bold;
+}
+
+.weather-icon {
+    width: 100px;
+    height: 100px;
+}
+
+.details {
+    font-size: 16px;
+    margin-top: 10px;
+}
+
+.forecast {
+    display: flex;
+    overflow-x: auto;
+    padding: 10px 0;
+}
+
+.forecast-item {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 12px;
+    margin-right: 10px;
+    padding: 10px;
+    text-align: center;
+    min-width: 80px;
+}
+
+.navigation {
+    display: flex;
+    justify-content: space-around;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 10px;
+    border-radius: 12px;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+@media (min-width: 768px) {
+    .navigation {
+        position: static;
+        flex-direction: row;
+    }
+}
+
+@media (min-width: 1024px) {
+    .weather-card {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .details {
+        text-align: left;
+    }
+}

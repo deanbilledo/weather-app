@@ -1,0 +1,27 @@
+{
+  "name": "Weather App",
+  "short_name": "Weather",
+  "description": "A modern, responsive weather application providing comprehensive weather information.",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#FFFFFF",
+  "theme_color": "#1E90FF",
+  "icons": [
+    {
+      "src": "assets/icons/weather-icons/sunny.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "assets/icons/weather-icons/rainy.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "assets/icons/weather-icons/cloudy.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml"
+    }
+  ],
+  "scope": "/weather-app/"
+}

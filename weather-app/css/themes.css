@@ -1,0 +1,55 @@
+:root {
+    --color-clear-sunny: linear-gradient(to bottom, #87CEEB, #1E90FF);
+    --color-rainy: linear-gradient(to bottom, #2C3E50, #34495E);
+    --color-cloudy: linear-gradient(to bottom, #D3D3D3, #778899);
+    --color-night: linear-gradient(to bottom, #191970, #000000);
+    
+    --text-color: #FFFFFF;
+    --card-background: rgba(255, 255, 255, 0.8);
+    --shadow-color: rgba(0, 0, 0, 0.1);
+}
+
+body {
+    font-family: system-ui, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: var(--color-clear-sunny);
+    color: var(--text-color);
+}
+
+.weather-card {
+    background: var(--card-background);
+    border-radius: 16px;
+    box-shadow: 0 4px 8px var(--shadow-color);
+    padding: 24px;
+    margin: 16px;
+}
+
+.temperature {
+    font-size: 48px;
+    font-weight: bold;
+}
+
+.heading {
+    font-size: 32px;
+    margin: 16px 0;
+}
+
+.details {
+    font-size: 16px;
+}
+
+@media (min-width: 768px) {
+    .weather-card {
+        margin: 24px;
+    }
+}
+
+@media (max-width: 768px) {
+    .navigation {
+        display: flex;
+        justify-content: space-around;
+        background: var(--card-background);
+        padding: 12px;
+    }
+}
